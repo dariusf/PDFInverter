@@ -71,6 +71,10 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
  */
 public class PDFColorInverter extends PDFGraphicsStreamEngine
 {
+
+	private static final float EPSILON = 0.00001f;
+	private static final float[] OFFWHITE = new float[] { 0.8156862745098039f, 0.8431372549019608f, 0.8823529411764706f };
+
 	/**
 	 * List which, after calling {@link PDFColorInverter#processPage(PDPage)}, contains a
 	 * {@link SetColorOperatorStreamSlice} representing each {@link SetColor} operator in this page's content stream.
@@ -333,9 +337,13 @@ public class PDFColorInverter extends PDFGraphicsStreamEngine
 					float[] rgb = cs.toRGB(slice.color.getComponents());
 					System.out.print(Arrays.toString(rgb) + " -> ");
 					// invert the rgb values
-					rgb[0] = 1f - rgb[0];
-					rgb[1] = 1f - rgb[1];
-					rgb[2] = 1f - rgb[2];
+					for (int i = 0; i <= 2; i++) {
+						if (rgb[i] < EPSILON) {
+							rgb[i] = OFFWHITE[i];
+						} else {
+							rgb[i] = 1f - rgb[i];
+						}
+					}
 					System.out.println(Arrays.toString(rgb));
 
 					// construct the new operation
