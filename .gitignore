@@ -11,5 +11,6 @@ hs_err_pid*
 .settings
 .classpath
 .pdf
+*.pdf
 
 !gradle-wrapper.jar
